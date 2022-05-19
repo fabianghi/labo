@@ -104,11 +104,11 @@ archivo_salida  <- "./labo/exp/HT2020/gridsearch.txt"
 
 #itero por los loops anidados para cada hiperparametro
 
-for( vmax_depth  in  c( 6 )  )
+for( vmax_depth  in  c( 5 )  )
 {
-for( vmin_split  in  c(  1060, 1100 )  )
+for( vmin_split  in  c(  900 )  )
 {
-for( vmin_bucket  in  c( 450, 500, 550 )  )
+for( vmin_bucket  in  c( 440 )  )
 {
 
   #notar como se agrega

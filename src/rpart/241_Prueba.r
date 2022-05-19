@@ -91,28 +91,31 @@ archivo_salida  <- "./labo/exp/HT2020/gridsearch.txt"
 #Escribo los titulos al archivo donde van a quedar los resultados
 #atencion que si ya existe el archivo, esta instruccion LO SOBREESCRIBE, y lo que estaba antes se pierde
 #la forma que no suceda lo anterior es con append=TRUE
-cat( file=archivo_salida,
-     sep= "",
-     "max_depth", "\t",
-     "min_split", "\t",
-     "min_bucket", "\t",
-     "ganancia_promedio", "\n")
+#cat( file=archivo_salida,
+#     sep= "",
+#     "max_depth", "\t",
+#     "min_split", "\t",
+#     "min_bucket", "\t",
+#     "cp", "\t",
+#     "ganancia_promedio", "\n")
 
 
 #itero por los loops anidados para cada hiperparametro
 
-for( vmax_depth  in  c( 8 )  )
-#for( vmax_depth  in  c( 4, 6, 8, 10, 12, 14 )  )
+for( vmax_depth  in  c(8 )  )
+#for( vmax_depth  in  c( 4, 6, 8, 10, 12, 14, 20 )  )- 1
 {
-for( vmin_split  in  c( 750, 770,  790)  )
-#for( vmin_split  in  c( 1000, 800, 600, 400, 200, 100, 50, 20, 10 )  )
+for( vmin_split  in  c( 101,111 )  )
+#for( vmin_split  in  c( 1000, 800, 600, 400, 200, 100, 50, 20, 10 )  ) - 1
 {
-for( vmin_bucket in  c( 4, 6, 8 )  )
-#for( vmin_bucket in  c( 1 )  )
+for( vmin_bucket in  c( 8 )  )
+#for( vmin_bucket in  c( 1,3,5,8,10,12,15,20 )  ) - 1
+{
+for( vcp in  c( -0.1 )  )
 {
 
   #notar como se agrega
-  param_basicos  <- list( "cp"=       -0.5,       #complejidad minima
+  param_basicos  <- list( "cp"=        vcp,       #complejidad minima
                           "minsplit"=  vmin_split,  #minima cantidad de registros en un nodo para hacer el split
                           "minbucket"= vmin_bucket, #minima cantidad de registros en una hoja
                           "maxdepth"=  vmax_depth ) #profundidad máxima del arbol
@@ -127,8 +130,9 @@ for( vmin_bucket in  c( 4, 6, 8 )  )
         vmax_depth, "\t",
         vmin_split, "\t",
         vmin_bucket,"\t",
+        vcp,"\t",
         ganancia_promedio, "\n"  )
-
+}
 }
 }
 }
