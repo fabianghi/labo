@@ -9,9 +9,9 @@ require("rpart.plot")
 #Aqui debe cambiar los parametros por los que desea probar
 
 param_basicos  <- list( "cp"=          -0.3,  #complejidad minima
-                        "minsplit"=   1100,     #minima cantidad de registros en un nodo para hacer el split
-                        "minbucket"=  550,     #minima cantidad de registros en una hoja
-                        "maxdepth"=     6 )    #profundidad máxima del arbol
+                        "minsplit"=   1373,     #minima cantidad de registros en un nodo para hacer el split
+                        "minbucket"=  551,     #minima cantidad de registros en una hoja
+                        "maxdepth"=     20 )    #profundidad máxima del arbol
 
 
 #Aqui se debe poner la carpeta de SU computadora local

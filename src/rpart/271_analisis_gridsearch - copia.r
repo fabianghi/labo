@@ -32,5 +32,7 @@ archivo_salida  <- "./labo/exp/ST2030/arbol_analisis_gridsearch.pdf"
 
 #finalmente, genero el grafico guardandolo en un archivo pdf
 pdf( archivo_salida, paper="a4r" )
-prp(modelo, extra=101, digits=5, branch=1, type=4, varlen=0, faclen=0)
+#prp(modelo, extra=101, digits=5, branch=1, type=4, varlen=0, faclen=0)
+prp(modelo, extra=101, digits=5, branch=1, type=4, varlen=0, faclen=0, tweak=1.3)
+
 dev.off()

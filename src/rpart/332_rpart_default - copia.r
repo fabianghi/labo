@@ -10,23 +10,7 @@ require("rlist")
 require("rpart")
 require("parallel")
 
-#paquetes necesarios para la Bayesian Optimization
-require("DiceKriging")
-require("mlrMBO")
-
-
-#Defino la  Optimizacion Bayesiana
-
-kBO_iter  <- 100   #cantidad de iteraciones de la Optimizacion Bayesiana
-
-hs  <- makeParamSet(
-          makeNumericParam("cp"       , lower= -1   , upper=    0.1),
-          makeIntegerParam("minsplit" , lower=  1L  , upper= 8000L),  #la letra L al final significa ENTERO
-          makeIntegerParam("minbucket", lower=  1L  , upper= 2000L),
-          makeIntegerParam("maxdepth" , lower=  3L  , upper=   20L),
-          forbidden = quote( minbucket > 0.5*minsplit ) )             # minbuket NO PUEDE ser mayor que la mitad de minsplit
-
-ksemilla_azar  <- 102191   #cambiar por la primer semilla
+ksemilla_azar  <- 103087   #cambiar por la primer semilla
 
 #------------------------------------------------------------------------------
 #graba a un archivo los componentes de lista
@@ -140,7 +124,7 @@ EstimarGanancia  <- function( x )
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
 
-setwd( "D:\\gdrive\\ITBA2022A\\" )
+setwd("C:/Users/ICBC/Desktop/Mineria") 
 
 #cargo el dataset
 dataset  <- fread("./datasets/paquete_premium_202011.csv")   #donde entreno
@@ -149,12 +133,12 @@ dataset  <- fread("./datasets/paquete_premium_202011.csv")   #donde entreno
 #creo la carpeta donde va el experimento
 # HT  representa  Hiperparameter Tuning
 dir.create( "./labo/exp/",  showWarnings = FALSE ) 
-dir.create( "./labo/exp/HT3210/", showWarnings = FALSE )
-setwd("D:\\gdrive\\ITBA2022A\\labo\\exp\\HT3210\\")   #Establezco el Working Directory DEL EXPERIMENTO
+dir.create( "./labo/exp/HT3220/", showWarnings = FALSE )
+setwd("C:/Users/ICBC/Desktop/Mineria/labo/exp/HT3220/")   #Establezco el Working Directory DEL EXPERIMENTO
 
 
-archivo_log  <- "HT321.txt"
-archivo_BO   <- "HT321.RDATA"
+archivo_log  <- "HT332.txt"
+
 
 #leo si ya existe el log, para retomar en caso que se se corte el programa
 GLOBAL_iteracion  <- 0
@@ -167,30 +151,12 @@ if( file.exists(archivo_log) )
 
 
 
-#Aqui comienza la configuracion de la Bayesian Optimization
+#La llamada con los parametros por default
 
-funcion_optimizar  <- EstimarGanancia
+x  <- list(  cp=          0.01,
+             minsplit=   20,
+             minbucket=   6,
+             maxdepth=   30
+           )
 
-configureMlr( show.learner.output= FALSE)
-
-#configuro la busqueda bayesiana,  los hiperparametros que se van a optimizar
-#por favor, no desesperarse por lo complejo
-obj.fun  <- makeSingleObjectiveFunction(
-              fn=       funcion_optimizar,
-              minimize= FALSE,   #estoy Maximizando la ganancia
-              noisy=    TRUE,
-              par.set=  hs,
-              has.simple.signature = FALSE
-             )
-
-ctrl  <- makeMBOControl( save.on.disk.at.time= 600,  save.file.path= archivo_BO)
-ctrl  <- setMBOControlTermination(ctrl, iters= kBO_iter )
-ctrl  <- setMBOControlInfill(ctrl, crit= makeMBOInfillCritEI())
-
-surr.km  <- makeLearner("regr.km", predict.type= "se", covtype= "matern3_2", control= list(trace= TRUE))
-
-#inicio la optimizacion bayesiana
-if( !file.exists( archivo_BO ) ) {
-  run  <- mbo(obj.fun, learner = surr.km, control = ctrl)
-} else  run  <- mboContinue( archivo_BO )   #retomo en caso que ya exista
-
+EstimarGanancia( x )

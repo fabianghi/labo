@@ -1,4 +1,6 @@
-#esqueleto de grid search
+#script  para alumnos avanzados
+
+#esqueleto de grid search con la Loss Matrix
 #se espera que los alumnos completen lo que falta para recorrer TODOS cuatro los hiperparametros 
 
 rm( list=ls() )  #Borro todos los objetos
@@ -8,11 +10,7 @@ require("data.table")
 require("rpart")
 require("parallel")
 
-
-ksemillas  <- c(103087, 103391, 103613, 104087, 104309) #Estas son mis semillas
-
-#ksemillas  <- c(52511, 52517, 52529, 52541, 52543, 52553) #Estas son mis semillas
-
+ksemillas  <- c(103087, 103391, 103613, 104087, 104309) #reemplazar por las propias semillas
 
 #------------------------------------------------------------------------------
 #particionar agrega una columna llamada fold a un dataset que consiste en una particion estratificada segun agrupa
@@ -29,15 +27,19 @@ particionar  <- function( data,  division, agrupa="",  campo="fold", start=1, se
 }
 #------------------------------------------------------------------------------
 
-ArbolEstimarGanancia  <- function( semilla, param_basicos )
+ArbolEstimarGanancia  <- function( semilla, param_basicos, peso_error )
 {
   #particiono estratificadamente el dataset
   particionar( dataset, division=c(70,30), agrupa="clase_ternaria", seed= semilla )  #Cambiar por la primer semilla de cada uno !
+
+  #va la matriz de perdida,  por columnas
+  matriz_perdida  <- matrix(c( 0,peso_error,1,   1,0,1,   1,peso_error,0), nrow = 3)
 
   #genero el modelo
   modelo  <- rpart("clase_ternaria ~ .",     #quiero predecir clase_ternaria a partir del resto
                    data= dataset[ fold==1],  #fold==1  es training,  el 70% de los datos
                    xval= 0,
+                   parms= list( loss= matriz_perdida),
                    control= param_basicos )  #aqui van los parametros del arbol
 
   #aplico el modelo a los datos de testing
@@ -62,12 +64,12 @@ ArbolEstimarGanancia  <- function( semilla, param_basicos )
 }
 #------------------------------------------------------------------------------
 
-ArbolesMontecarlo  <- function( semillas, param_basicos )
+ArbolesMontecarlo  <- function( semillas, param_basicos, peso_error )
 {
   #la funcion mcmapply  llama a la funcion ArbolEstimarGanancia  tantas veces como valores tenga el vector  ksemillas
   ganancias  <- mcmapply( ArbolEstimarGanancia, 
                           semillas,   #paso el vector de semillas, que debe ser el primer parametro de la funcion ArbolEstimarGanancia
-                          MoreArgs= list( param_basicos),  #aqui paso el segundo parametro
+                          MoreArgs= list( param_basicos, peso_error),  #aqui paso el segundo parametro
                           SIMPLIFY= FALSE,
                           mc.cores= 1 )  #se puede subir a 5 si posee Linux o Mac OS
 
@@ -78,47 +80,50 @@ ArbolesMontecarlo  <- function( semillas, param_basicos )
 #------------------------------------------------------------------------------
 
 #Aqui se debe poner la carpeta de la computadora local
-setwd("C:/Users/ICBC/Desktop/Mineria")   #Establezco el Working Directory
+setwd("D:\\gdrive\\ITBA2022A\\")   #Establezco el Working Directory
 
 #cargo los datos
 dataset  <- fread("./datasets/paquete_premium_202011.csv")
 
+#ordeno para que queden en orden BAJA+1, BAJA+2, CONTINUA
+#The order of the loss matrix depends on the order of your factor variable in R
+setorder( dataset, clase_ternaria )
 
 #genero el archivo para Kaggle
 #creo la carpeta donde va el experimento
 # HT  representa  Hiperparameter Tuning
 dir.create( "./labo/exp/",  showWarnings = FALSE ) 
-dir.create( "./labo/exp/HT2020/", showWarnings = FALSE )
-archivo_salida  <- "./labo/exp/HT2020/gridsearch.txt"
+dir.create( "./labo/exp/HT2021/", showWarnings = FALSE )
+archivo_salida  <- "./labo/exp/HT2021/gridsearch.txt"
 
 #Escribo los titulos al archivo donde van a quedar los resultados
 #atencion que si ya existe el archivo, esta instruccion LO SOBREESCRIBE, y lo que estaba antes se pierde
 #la forma que no suceda lo anterior es con append=TRUE
-#cat( file=archivo_salida,
-#     sep= "",
-#     "max_depth", "\t",
-#     "min_split", "\t",
-#     "min_bucket", "\t",
-#     "ganancia_promedio", "\n")
+cat( file=archivo_salida,
+     sep= "",
+     "max_depth", "\t",
+     "min_split", "\t",
+     "peso_error", "\t",
+     "ganancia_promedio", "\n")
 
 
 #itero por los loops anidados para cada hiperparametro
 
-for( vmax_depth  in  c( 20 )  )
+for( vmax_depth  in  c( 4, 6, 8, 10, 12, 14 )  )
 {
-for( vmin_split  in  c(  1373 )  )
+for( vmin_split  in  c( 1000, 800, 600, 400, 200, 100, 50, 20, 10 )  )
 {
-for( vmin_bucket  in  c( 551 )  )
+for( vpeso_error  in  c( 1, 10, 20, 40, 60) )
 {
 
   #notar como se agrega
   param_basicos  <- list( "cp"=         -0.5,       #complejidad minima
                           "minsplit"=  vmin_split,  #minima cantidad de registros en un nodo para hacer el split
-                          "minbucket"= vmin_bucket,          #minima cantidad de registros en una hoja
+                          "minbucket"=  5,          #minima cantidad de registros en una hoja
                           "maxdepth"=  vmax_depth ) #profundidad máxima del arbol
 
   #Un solo llamado, con la semilla 17
-  ganancia_promedio  <- ArbolesMontecarlo( ksemillas,  param_basicos )
+  ganancia_promedio  <- ArbolesMontecarlo( ksemillas,  param_basicos, vpeso_error )
 
   #escribo los resultados al archivo de salida
   cat(  file=archivo_salida,
@@ -126,9 +131,8 @@ for( vmin_bucket  in  c( 551 )  )
         sep= "",
         vmax_depth, "\t",
         vmin_split, "\t",
-        vmin_bucket, "\t",
+        vpeso_error, "\t",
         ganancia_promedio, "\n"  )
-
 }
 }
 }
