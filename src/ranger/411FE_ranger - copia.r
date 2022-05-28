@@ -16,26 +16,27 @@ require("randomForest")  #solo se usa para imputar nulos
 setwd("C:/Users/ICBC/Desktop/Mineria")    #Establezco el Working Directory
 
 #cargo los datos donde entreno
-dtrain  <- fread("./datasets/paquete_premium_202011.csv", stringsAsFactors= TRUE)
+dtrain  <- fread("C:/Users/ICBC/Desktop/Mineria/labo/exp/FE4020/paquete_premium_202011_ext.csv", stringsAsFactors= TRUE)
+
 
 #imputo los nulos, ya que ranger no acepta nulos
 #Leo Breiman, ¿por que le temias a los nulos?
 dtrain  <- na.roughfix( dtrain )
 
 #cargo los datos donde aplico el modelo
-dapply  <- fread("./datasets/paquete_premium_202101.csv", stringsAsFactors= TRUE)
+dapply  <- fread("C:/Users/ICBC/Desktop/Mineria/labo/exp/FE4020/paquete_premium_202101_ext.csv", stringsAsFactors= TRUE)
 dapply[ , clase_ternaria := NULL ]  #Elimino esta columna que esta toda en NA
 dapply  <- na.roughfix( dapply )  #tambien imputo los nulos en los datos donde voy a aplicar el modelo
 
 #genero el modelo de Random Forest con la libreria ranger
 #notar como la suma de muchos arboles contrarresta el efecto de min.node.size=1
-param  <- list( "num.trees"=       928,  #cantidad de arboles
-                "mtry"=           6,  #cantidad de variables que evalua para hacer un split  sqrt(ncol(dtrain))
-                "min.node.size"=  500,  #tamaño minimo de las hojas
-                "max.depth"=      30   # 0 significa profundidad infinita
+param  <- list( "num.trees"=       1682,  #cantidad de arboles
+                "mtry"=           21,  #cantidad de variables que evalua para hacer un split  sqrt(ncol(dtrain))
+                "min.node.size"=  75,  #tamaño minimo de las hojas
+                "max.depth"=      5   # 0 significa profundidad infinita
               )
 
-set.seed(102191) #Establezco la semilla aleatoria
+set.seed(103087) #Establezco la semilla aleatoria
 
 #para preparar la posibilidad de asignar pesos a las clases
 #la teoria de  Maite San Martin
@@ -64,7 +65,7 @@ entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_clien
 # HT  representa  Hiperparameter Tuning
 dir.create( "./labo/exp/",  showWarnings = FALSE ) 
 dir.create( "./labo/exp/KA2411/", showWarnings = FALSE )
-archivo_salida  <- "./labo/exp/KA2411/KA_411_001.csv"
+archivo_salida  <- "./labo/exp/KA2411/KA_411FE_001_A.csv"
 
 #genero el archivo para Kaggle
 fwrite( entrega, 

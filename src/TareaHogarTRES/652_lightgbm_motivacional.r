@@ -61,7 +61,7 @@ campos_buenos  <- setdiff( colnames(dataset), c("clase_ternaria","clase01") )
 #establezco donde entreno, desde enero a noviembre,  SIN  junio-2020
 #entreno en la UNION de 11 meses
 dataset[ , train  := 0L ]
-dataset[ foto_mes >= 202001 & foto_mes<=202011 & foto_mes != 202006, 
+dataset[ (foto_mes = 202001 | foto_mes<=201901 | foto_mes<=201801) & foto_mes != 202006, 
          train  := 1L ]
 
 #--------------------------------------
@@ -85,7 +85,7 @@ modelo  <- lgb.train( data= dtrain,
                                    num_leaves=         1002,
                                    min_data_in_leaf=   6263,
                                    feature_fraction=      0.9100319271,
-                                   seed=             10387
+                                   seed=             102191
                                   )
                     )
 
