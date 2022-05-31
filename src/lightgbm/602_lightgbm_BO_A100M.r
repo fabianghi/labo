@@ -36,16 +36,16 @@ hs <- makeParamSet(
 
 
 kprefijo       <- "HT601"
-ksemilla_azar  <- 102191  #Aqui poner la propia semilla
+ksemilla_azar  <- 103087  #Aqui poner la propia semilla
 kdataset       <- "./datasets/paquete_premium_ext_001.csv.gz"
 
 #donde entrenar
-ktrain_mes_desde    <- 201912        #mes desde donde entreno
-ktrain_mes_hasta    <- 202011        #mes hasta donde entreno, inclusive
+ktrain_mes_desde    <- 201903        #mes desde donde entreno
+ktrain_mes_hasta    <- 202002        #mes hasta donde entreno, inclusive
 ktrain_meses_malos  <- c( 202006 )   #meses a excluir del entrenamiento
 
 
-kexperimento   <- paste0( kprefijo, "0" )
+kexperimento   <- paste0( kprefijo, "A100M" )
 kbayesiana     <- "BO.RDATA"
 klog           <- "BO_log.txt"
 
@@ -108,7 +108,7 @@ EstimarGanancia_lightgbm  <- function( x )
                           boost_from_average= TRUE,
                           feature_pre_filter= FALSE,
                           verbosity= -100,
-                          seed= 999983,
+                          seed= 103087,
                           max_depth=  -1,         # -1 significa no limitar,  por ahora lo dejo fijo
                           min_gain_to_split= 0.0, #por ahora, lo dejo fijo
                           lambda_l1= 0.0,         #por ahora, lo dejo fijo
