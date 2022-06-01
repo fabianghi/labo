@@ -30,12 +30,12 @@ modelo  <- xgb.train( data= dtrain,
                       param= list( objective=       "binary:logistic",
                                    tree_method=     "hist",
                                    grow_policy=     "lossguide",
-                                   max_leaves=          1019,
-                                   min_child_weight=    8,
-                                   eta=                 0.01,
-                                   colsample_bytree=    0.57
+                                   max_leaves=          20,
+                                   min_child_weight=    1,
+                                   eta=                 0.3,
+                                   colsample_bytree=    1.0
                                    ),
-                      nrounds= 237
+                      nrounds= 34
                     )
 
 #aplico el modelo a los datos sin clase
@@ -58,4 +58,3 @@ archivo_salida  <- "./labo/exp/KA5710/KA_571_001.csv"
 fwrite( entrega, 
         file= archivo_salida, 
         sep= "," )
-
