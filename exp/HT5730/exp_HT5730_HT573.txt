@@ -1,4 +1,4 @@
-fecha	gamma	alpha	lambda	subsample	tree_method	grow_policy	max_bin	max_depth	scale_pos_weight	eta	colsample_bytree	min_child_weight	max_leaves	prob_corte	nrounds	ganancia	iteracion
+leaves	gamma	alpha	lambda	subsample	tree_method	grow_policy	max_bin	max_depth	scale_pos_weight	eta	colsample_bytree	min_child_weight	max_leaves	prob_corte	nrounds	ganancia	iteracion
 20220529 010835	0	0	0	1	hist	lossguide	256	0	1	0.0100633456504836	0.568781307215688	10	8	0.0147384455506928	644	13922000	79
 20220528 234505	0	0	0	1	hist	lossguide	256	0	1	0.0101197524579148	0.573495737760379	8	6	0.0144275831006172	966	13919000	47
 20220529 010407	0	0	0	1	hist	lossguide	256	0	1	0.298700083250294	0.547070912334649	8	2	0.0143692763361062	252	13814000	75

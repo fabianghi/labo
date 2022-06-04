@@ -30,12 +30,19 @@ modelo  <- xgb.train( data= dtrain,
                       param= list( objective=       "binary:logistic",
                                    tree_method=     "hist",
                                    grow_policy=     "lossguide",
-                                   max_leaves=          20,
-                                   min_child_weight=    1,
-                                   eta=                 0.3,
-                                   colsample_bytree=    1.0
-                                   ),
-                      nrounds= 34
+                                   max_leaves=          1023,
+                                   min_child_weight=    10,
+                                   eta=                 0.037,
+                                   colsample_bytree=    0.58,
+                                   gamma= 0.0,
+                                   alpha= 0.0,
+                                   lambda= 0.0,
+                                   subsample= 1.0,
+                                   max_bin= 256,
+                                   maxdepth= 0,
+                                   scale_pos_weight= 1.0
+                            ),
+                      nrounds= 644
                     )
 
 #aplico el modelo a los datos sin clase
@@ -48,7 +55,7 @@ prediccion  <- predict( modelo,
 
 #Genero la entrega para Kaggle
 entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_cliente],
-                                 "Predicted"= as.integer( prediccion > 1/60)  ) ) #genero la salida
+                                 "Predicted"= as.integer( prediccion > 0.0157187189697953)  ) ) #genero la salida
 
 dir.create( "./labo/exp/",  showWarnings = FALSE ) 
 dir.create( "./labo/exp/KA5710/", showWarnings = FALSE )
