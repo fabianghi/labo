@@ -5,7 +5,7 @@ googlecloud:
 
 
 experiment:
-  script: "src/completo/912_FE_desborde - copia.r" #que script usa este  archivo
+  script: "src/completo/912_FE_desborde.r"  #que script usa este  archivo
   restart: FALSE
   name: "exp"
   requires: [ "DT0001" ]
