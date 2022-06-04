@@ -5,7 +5,7 @@ googlecloud:
 
 
 experiment:
-  script: "src/completo/z912_FE_desborde.r"
+  script: "src/completo/912_FE_desborde - copia.r" #que script usa este  archivo
   restart: FALSE
   name: "exp"
   requires: [ "DT0001" ]
@@ -17,7 +17,7 @@ param:
   corregir: TRUE    #se se corrige los campos/foto_mes  MALOS
   variablesdrift: [] #variables que se eliminan porque estan mal en el futuro
   
-  variablesmanuales: FALSE
+  variablesmanuales: TRUE # quiero que utilice la variable inventada por mi
 
   acumulavars: FALSE   #a lo nuevo lo va aplicando
 
@@ -27,7 +27,7 @@ param:
     tendencia: TRUE
     minimo:    FALSE
     maximo:    FALSE
-    promedio:  TRUE
+    promedio:  FALSE
     ratioavg:  FALSE
     ratiomax:  FALSE
 
