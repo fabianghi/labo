@@ -16,8 +16,8 @@ require("data.table")
 require("randomForest")
 require("ranger")
 
-
-setwd("C:/Users/ICBC/Desktop/Mineria") #cambiar por la carpeta local
+setwd( "~/buckets/b1/" )  #cambiar por la carpeta local
+#setwd("C:/Users/ICBC/Desktop/Mineria") #cambiar por la carpeta local
 
 #leo el dataset
 dataset  <- fread( "./datasets/paquete_premium.csv.gz", stringsAsFactors= TRUE)
