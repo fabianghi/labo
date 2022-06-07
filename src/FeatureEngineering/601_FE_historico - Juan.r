@@ -19,7 +19,7 @@ options(error = function() {
   stop("exiting after script error") 
 })
 
-kdataset_salida  <- "paquete_premium_ext_001.csv.gz"
+kdataset_salida  <- "paquete_premium_ext_001.csv"
 kcampos_fijos  <- c( "numero_de_cliente", "clase_ternaria", "foto_mes" )
 
 #------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ ReportarCampos  <- function( dataset )
 AgregarMes  <- function( dataset )
 {
   gc()
-  dataset[  , mes := foto_mes %% 100 ]  
+  dataset[  , mes := foto_mes %% 100 ]
   ReportarCampos( dataset )
 }
 #------------------------------------------------------------------------------
@@ -212,6 +212,7 @@ AgregarVariables  <- function( dataset )
 
   #combino MasterCard y Visa
   dataset[ , mv_mfinanciacion_limite := rowSums( cbind( Master_mfinanciacion_limite,  Visa_mfinanciacion_limite) , na.rm=TRUE ) ]
+
   dataset[ , mv_Fvencimiento         := pmin( Master_Fvencimiento, Visa_Fvencimiento, na.rm = TRUE) ]
   dataset[ , mv_Finiciomora          := pmin( Master_Finiciomora, Visa_Finiciomora, na.rm = TRUE) ]
   dataset[ , mv_msaldototal          := rowSums( cbind( Master_msaldototal,  Visa_msaldototal) , na.rm=TRUE ) ]
@@ -252,31 +253,6 @@ AgregarVariables  <- function( dataset )
 
   #Aqui debe usted agregar sus propias nuevas variables
 
-  
-  dataset[ , fg_trx_canales := rowSums( cbind(cmobile_app_trx, ccallcenter_trx, chomebanking_trx, catm_trx_other, catm_trx, ctarjeta_debito_trx) , na.rm=TRUE ) ]
-  dataset[ , fg_trx_total := rowSums( cbind(fg_trx_canales, ctarjeta_visa_trx, ctarjeta_master_trx, ccajas_trx) , na.rm=TRUE ) ]
-  dataset[ , fg_m_descuentos := rowSums( cbind(mcajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_visa_descuentos) , na.rm=TRUE )  ]
-  dataset[ , fg_c_transferencias := rowSums( cbind(ctransferencias_recibidas, ctransferencias_emitidas) , na.rm=TRUE )  ]
-  dataset[ , fg_m_transferencias := rowSums( cbind(mtransferencias_recibidas, mtransferencias_emitidas) , na.rm=TRUE )  ]
-  dataset[ , fg_m_pasivos := rowSums( cbind(mcaja_ahorro, mcaja_ahorro_adicional, mcaja_ahorro_dolares, mplazo_fijo_pesos, mplazo_fijo_dolares,ifelse( mcuenta_corriente > 0, mcuenta_corriente, 0 )) , na.rm=TRUE ) ]
-  dataset[ , fg_m_activos := rowSums( cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios,ifelse( mcuenta_corriente< 0, abs(mcuenta_corriente), 0 )) , na.rm=TRUE )  ]
-  dataset[ , fg_c_seguros := rowSums( cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales) , na.rm=TRUE )  ]
-  dataset[ , fg_m_mpayroll := rowSums( cbind(mpayroll, mpayroll2, ) , na.rm=TRUE ) ]
-  dataset[ , fg_c_deb_autom := rowSums( cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
-  dataset[ , fg_m_deb_autom := rowSums( cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos, mtarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
-  dataset[ , fg_m_margen := rowSums( cbind(mactivos_margen, mpasivos_margen) , na.rm=TRUE ) ]
-  
-  #Sin sentido alguno
-  
-  dataset[ , fg_ss1  := mrentabilidad_annual / mrentabilidad ]
-  dataset[ , fg_ss2  := mrentabilidad / cproductos ]
-  dataset[ , fg_ss3  := mcomisiones / cliente_antiguedad ]
-  dataset[ , fg_ss4  := (mpayroll+mpayroll2)/mcuentas_saldo ]
-  dataset[ , fg_ss5  := fg_m_margen/mcuentas_saldo ]
-  dataset[ , fg_ss6  := mrentabilidad_annual / ctrx_quarter ]
- 
-
-  
   #valvula de seguridad para evitar valores infinitos
   #paso los infinitos a NULOS
   infinitos      <- lapply(names(dataset),function(.name) dataset[ , sum(is.infinite(get(.name)))])
@@ -565,10 +541,10 @@ Rankeador  <- function( cols )
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
 
-setwd( "~/buckets/b1/datasets/" )
+setwd("C:/Users/ICBC/Desktop/Mineria/datasets")
 
 #cargo el dataset
-dataset   <- fread( "paquete_premium.csv.gz" )
+dataset   <- fread( "paquete_premium_202011.csv" )
 
 #ordeno el dataset por <numero_de_cliente, foto_mes> para poder hacer lags
 setorder( dataset, numero_de_cliente, foto_mes )
@@ -590,13 +566,13 @@ AgregarVariables( dataset )
 cols_lagueables  <- copy( setdiff( colnames(dataset), kcampos_fijos ) )
 
 #Rankea las variables dentro de cada mes
-#setorder( dataset, foto_mes, numero_de_cliente )
-#Rankeador( cols_lagueables )
-#setorder( dataset, numero_de_cliente, foto_mes )
+setorder( dataset, foto_mes, numero_de_cliente )
+Rankeador( cols_lagueables )
+setorder( dataset, numero_de_cliente, foto_mes )
 
 #reduciendo la cantidad de atributos
 #comentar si no se quiere que corra
-#CanaritosImportancia()
+CanaritosImportancia()
 #cols_lagueables  <- intersect( cols_lagueables,  colnames(dataset) )
 
 #reacomodo las cols_lagueables ya que muchas de las originales han desaparecido
@@ -619,7 +595,7 @@ TendenciaYmuchomas( dataset,
 Lags( cols_lagueables, 1, TRUE )   #calculo los lags de orden  i
 
 #Aqui se podrian descomentar
-#Lags( cols_lagueables, 1, TRUE )   #calculo los lags de orden  i
+Lags( cols_lagueables, 1, TRUE )   #calculo los lags de orden  i
 
 #reduciendo la cantidad de atributos
 #comentar si no se quiere que corra

@@ -249,7 +249,27 @@ AgregarVariables  <- function( dataset )
 
   #Aqui debe usted agregar sus propias nuevas variables
 
-  dataset[ , mvr_PR_Suma_mconsumototal       := mv_mconsumototal  + mv_mlimitecompra ]
+  dataset[ , fg_trx_canales := rowSums( cbind(cmobile_app_trx, ccallcenter_trx, chomebanking_trx, catm_trx_other, catm_trx, ctarjeta_debito_trx) , na.rm=TRUE ) ]
+  dataset[ , fg_trx_total := rowSums( cbind(fg_trx_canales, ctarjeta_visa_trx, ctarjeta_master_trx, ccajas_trx) , na.rm=TRUE ) ]
+  dataset[ , fg_m_descuentos := rowSums( cbind(mcajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_visa_descuentos) , na.rm=TRUE )  ]
+  dataset[ , fg_c_transferencias := rowSums( cbind(ctransferencias_recibidas, ctransferencias_emitidas) , na.rm=TRUE )  ]
+  dataset[ , fg_m_transferencias := rowSums( cbind(mtransferencias_recibidas, mtransferencias_emitidas) , na.rm=TRUE )  ]
+  dataset[ , fg_m_pasivos := rowSums( cbind(mcaja_ahorro, mcaja_ahorro_adicional, mcaja_ahorro_dolares, mplazo_fijo_pesos, mplazo_fijo_dolares,ifelse( mcuenta_corriente > 0, mcuenta_corriente, 0 )) , na.rm=TRUE ) ]
+  dataset[ , fg_m_activos := rowSums( cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios,ifelse( mcuenta_corriente< 0, abs(mcuenta_corriente), 0 )) , na.rm=TRUE )  ]
+  dataset[ , fg_c_seguros := rowSums( cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales) , na.rm=TRUE )  ]
+  dataset[ , fg_m_mpayroll := rowSums( cbind(mpayroll, mpayroll2, ) , na.rm=TRUE ) ]
+  dataset[ , fg_c_deb_autom := rowSums( cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
+  dataset[ , fg_m_deb_autom := rowSums( cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos, mtarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
+  dataset[ , fg_m_margen := rowSums( cbind(mactivos_margen, mpasivos_margen) , na.rm=TRUE ) ]
+  
+  #Sin sentido alguno
+  
+  dataset[ , fg_ss1  := mrentabilidad_annual / mrentabilidad ]
+  dataset[ , fg_ss2  := mrentabilidad / cproductos ]
+  dataset[ , fg_ss3  := mcomisiones / cliente_antiguedad ]
+  dataset[ , fg_ss4  := (mpayroll+mpayroll2)/mcuentas_saldo ]
+  dataset[ , fg_ss5  := fg_m_margen/mcuentas_saldo ]
+  dataset[ , fg_ss6  := mrentabilidad_annual / ctrx_quarter ]
   
   #valvula de seguridad para evitar valores infinitos
   #paso los infinitos a NULOS
