@@ -259,7 +259,7 @@ AgregarVariables  <- function( dataset )
   dataset[ , fg_c_seguros := rowSums( cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales) , na.rm=TRUE )  ]
   dataset[ , fg_m_mpayroll := rowSums( cbind(mpayroll, mpayroll2 ) , na.rm=TRUE ) ]
   dataset[ , fg_c_deb_autom := rowSums( cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
-  dataset[ , fg_m_deb_autom := rowSums( cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos, mtarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
+  dataset[ , fg_m_deb_autom := rowSums( cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos, mttarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
   dataset[ , fg_m_margen := rowSums( cbind(mactivos_margen, mpasivos_margen) , na.rm=TRUE ) ]
   
   #Sin sentido alguno
