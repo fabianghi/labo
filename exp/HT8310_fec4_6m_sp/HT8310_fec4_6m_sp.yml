@@ -12,7 +12,6 @@ experiment:
   name: "exp"
   requires:   [ "TS8210_fec4_6m_sp" ]
 
-
 param:
   algoritmo:  "lightgbm"
   semilla: 103087
