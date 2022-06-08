@@ -250,17 +250,26 @@ AgregarVariables  <- function( dataset )
   #Aqui debe usted agregar sus propias nuevas variables
 
   dataset[ , fg_trx_canales := rowSums( cbind(cmobile_app_trx, ccallcenter_trx, chomebanking_trx, catm_trx_other, catm_trx, ctarjeta_debito_trx) , na.rm=TRUE ) ]
-  dataset[ , fg_trx_total := rowSums( cbind(fg_trx_canales, ctarjeta_visa_trx, ctarjeta_master_trx, ccajas_trx) , na.rm=TRUE ) ]
-  dataset[ , fg_m_descuentos := rowSums( cbind(mcajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_visa_descuentos) , na.rm=TRUE )  ]
+  dataset[ , fg_trx_total := rowSums( cbind(fg_trx_canales, ctarjeta_visa_trx, ctarjeta_master_trx, ccajas_trx, cpagodeservicios, cpagomiscuentas, ccheques_depositados, ccheques_emitidos) , na.rm=TRUE ) ]
+  dataset[ , fg_m_descuentos := rowSums( cbind(mcajeros_propios_descuentos, mtarjeta_visa_descuentos, mtarjeta_master_descuentos) , na.rm=TRUE )  ]
+  dataset[ , fg_c_descuentos := rowSums( cbind(ccajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_master_descuentos) , na.rm=TRUE )  ]
   dataset[ , fg_c_transferencias := rowSums( cbind(ctransferencias_recibidas, ctransferencias_emitidas) , na.rm=TRUE )  ]
   dataset[ , fg_m_transferencias := rowSums( cbind(mtransferencias_recibidas, mtransferencias_emitidas) , na.rm=TRUE )  ]
+  dataset[ , fg_c_comisiones := rowSums( cbind(ccomisiones_mantenimiento, ccomisiones_otras) , na.rm=TRUE )  ]
+  dataset[ , fg_m_comisiones := rowSums( cbind(mcomisiones_mantenimiento, mcomisiones_otras) , na.rm=TRUE )  ]
   dataset[ , fg_m_pasivos := rowSums( cbind(mcaja_ahorro, mcaja_ahorro_adicional, mcaja_ahorro_dolares, mplazo_fijo_pesos, mplazo_fijo_dolares,ifelse( mcuenta_corriente > 0, mcuenta_corriente, 0 )) , na.rm=TRUE ) ]
   dataset[ , fg_m_activos := rowSums( cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios,ifelse( mcuenta_corriente< 0, abs(mcuenta_corriente), 0 )) , na.rm=TRUE )  ]
   dataset[ , fg_c_seguros := rowSums( cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales) , na.rm=TRUE )  ]
   dataset[ , fg_m_mpayroll := rowSums( cbind(mpayroll, mpayroll2 ) , na.rm=TRUE ) ]
+  dataset[ , fg_c_mpayroll := rowSums( cbind(cpayroll_trx, cpayroll2_trx ) , na.rm=TRUE ) ]
   dataset[ , fg_c_deb_autom := rowSums( cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
   dataset[ , fg_m_deb_autom := rowSums( cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos, mttarjeta_master_debitos_automaticos) , na.rm=TRUE ) ]
   dataset[ , fg_m_margen := rowSums( cbind(mactivos_margen, mpasivos_margen) , na.rm=TRUE ) ]
+  dataset[ , fg_c_Inversion := rowSums( cbind(cinversion1, cinversion2) , na.rm=TRUE ) ]
+  dataset[ , fg_m_Inversion := rowSums( cbind(minversion1_pesos, minversion1_dolares, minversion2) , na.rm=TRUE ) ]
+  dataset[ , fg_m_Consumo_tarj := rowSums( cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo) , na.rm=TRUE ) ]
+  
+ 
   
   #Sin sentido alguno
   
@@ -270,6 +279,15 @@ AgregarVariables  <- function( dataset )
   dataset[ , fg_ss4  := (mpayroll+mpayroll2)/mcuentas_saldo ]
   dataset[ , fg_ss5  := fg_m_margen/mcuentas_saldo ]
   dataset[ , fg_ss6  := mrentabilidad_annual / ctrx_quarter ]
+  dataset[ , fg_ss7  := fg_trx_total * cliente_antiguedad ]
+  dataset[ , fg_ss8  := fg_m_margen * cproductos ]
+  dataset[ , fg_ss9  := mrentabilidad_annual / cproductos ]
+  dataset[ , fg_ss10  := mrentabilidad / cproductos ]
+  dataset[ , fg_ss11  := fg_m_pasivos / cproductos ]  
+  
+  
+  
+ 
   
   #valvula de seguridad para evitar valores infinitos
   #paso los infinitos a NULOS
