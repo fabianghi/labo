@@ -28,13 +28,13 @@ param:
     periodos: [ ]
     rango:
       desde:  202001
-      hasta:  202011
+      hasta:  202009
     excluir: [ 202006 ]
     undersampling: [ {clase: "CONTINUA", prob: 0.1 } ]
 
   #donde valido
   validate:
-    periodos: [ ]
+    periodos: [ 202010 ]
     rango:
       desde:  
       hasta:  
@@ -43,7 +43,7 @@ param:
 
   #donde testeo
   test:
-    periodos: [ ]
+    periodos: [ 202011 ]
     rango:
       desde:  
       hasta:  
