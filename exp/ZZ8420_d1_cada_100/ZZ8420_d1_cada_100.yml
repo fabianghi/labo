@@ -24,8 +24,8 @@ param:
   clase_train_POS:    [ "BAJA+2", "BAJA+1" ]
   clase_test_POS:     [ "BAJA+2" ]
   KA_start:  10500
-  KA_end:   11500
-  KA_step:    100
+  KA_end:    11500
+  KA_step:    200
 
 
   files:
