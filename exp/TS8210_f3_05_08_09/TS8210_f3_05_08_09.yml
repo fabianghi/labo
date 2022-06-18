@@ -34,7 +34,7 @@ param:
 
   #donde valido
   validate:
-    periodos: [ 202010 , 202011 ]
+    periodos: [  202011 ]
     rango:
       desde:  
       hasta:  
@@ -43,7 +43,7 @@ param:
 
   #donde testeo
   test:
-    periodos: [ 202010 , 202011]
+    periodos: [  202011]
     rango:
       desde:  
       hasta:  
