@@ -17,7 +17,7 @@ param:
   corregir: TRUE    #se se corrige los campos/foto_mes  MALOS
   variablesdrift: [] #variables que se eliminan porque estan mal en el futuro
   
-  variablesmanuales: FALSE
+  variablesmanuales: TRUE
 
   acumulavars: FALSE   #a lo nuevo lo va aplicando
 
@@ -33,8 +33,8 @@ param:
 
 
   #lags y sus deltas , 6 posiciones
-  lag:   [ TRUE, TRUE, TRUE, TRUE, TRUE, TRUE ]
-  delta: [ TRUE, TRUE, TRUE, TRUE, TRUE, TRUE ]
+  lag:   [ TRUE, FALSE, TRUE, FALSE, FALSE, TRUE ]
+  delta: [ TRUE, FALSE, TRUE, FALSE, FALSE, TRUE ]
   canaritosratio: [ 0, 0, 0.2, 0, 0, 0.2 ]
 
   tony:  FALSE
