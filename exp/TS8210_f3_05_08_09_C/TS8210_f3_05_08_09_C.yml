@@ -25,7 +25,7 @@ param:
 
   #donde entreno
   train:
-    periodos: [ 202001, 202002, 202003, 202004, 202005, 202007, 202008, 202009 ]
+    periodos: [ 202001, 202002, 202003, 202004, 202005, 202007, 202008, 202009, 202010 ]
     rango:
       desde:  
       hasta:  
@@ -34,7 +34,7 @@ param:
 
   #donde valido
   validate:
-    periodos: [ 202010 , 202011 ]
+    periodos: [ 202011 ]
     rango:
       desde:  
       hasta:  
@@ -43,7 +43,7 @@ param:
 
   #donde testeo
   test:
-    periodos: [ 202010 , 202011]
+    periodos: [ 202011]
     rango:
       desde:  
       hasta:  
