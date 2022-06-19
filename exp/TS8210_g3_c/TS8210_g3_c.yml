@@ -8,7 +8,7 @@ experiment:
   script: "src/completo/z921_TS_generico.r"
   restart: FALSE
   name: "exp"
-  requires: [ "FE8120_f3" ]
+  requires: [ "FE8120_g3" ]
 
 
 param:
@@ -25,16 +25,16 @@ param:
 
   #donde entreno
   train:
-    periodos: [ 202001, 202005, 202008, 202009 ]
+    periodos: [ ]
     rango:
-      desde:  
-      hasta:  
-    excluir: [ ]
+      desde:  202003
+      hasta:  202010
+    excluir: [ 202006 ]
     undersampling: [ ]  #ATENCION  sin undersampling
 
   #donde valido
   validate:
-    periodos: [  202011 ]
+    periodos: [ 202011 ]
     rango:
       desde:  
       hasta:  
@@ -43,7 +43,7 @@ param:
 
   #donde testeo
   test:
-    periodos: [  202011]
+    periodos: [ 202011 ]
     rango:
       desde:  
       hasta:  
@@ -52,11 +52,11 @@ param:
 
   #donde entreno el modelo final
   train_final:
-    periodos: [ 202001, 202005, 202008, 202009,  202011 ]
+    periodos: [ ]
     rango:
-      desde:  
-      hasta:  
-    excluir: [ ]
+      desde:  202003
+      hasta:  202011
+    excluir: [ 202006 ]
     undersampling: [  ]
     
 
