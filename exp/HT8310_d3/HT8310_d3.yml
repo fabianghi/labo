@@ -31,8 +31,8 @@ param:
 
     learning_rate:      [ 0.01, 0.03]
     feature_fraction:   [ 0.1, 0.5 ]
-    num_leaves:         [ 15, 100, "integer" ]
-    min_data_in_leaf:   [  4000, 5000, "integer" ]
+    num_leaves:         [ 10, 1000, "integer" ]
+    min_data_in_leaf:   [  1000, 7000, "integer" ]
 
     lambda_l1:  0                    # [ 0  ,  10]
     lambda_l2:  0                    # [ 0  , 200]
