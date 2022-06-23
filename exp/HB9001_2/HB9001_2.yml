@@ -17,9 +17,9 @@ experiment:
 
 
 param:
-  KA_start:  8250
-  KA_end:   14250
-  KA_step:    500
+  KA_start:  9500
+  KA_end:   10300
+  KA_step:    100
 
 
   files:
